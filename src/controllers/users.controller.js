@@ -76,7 +76,7 @@ const updateUser = async (req, res) => {
 
     const user = await User.findByIdAndUpdate(id, rest, { new: true });
 
-    res.status(200).status(200).json({ user });
+    res.status(200).json({ user });
 }
 
 const deleteUser = async (req, res) => {
