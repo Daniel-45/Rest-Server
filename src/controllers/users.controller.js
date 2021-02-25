@@ -1,61 +1,99 @@
-const getUsers = (req, res) => {
+const bcrypt = require('bcryptjs');
+const User = require('../models/user');
+
+const getUsers = async (req, res) => {
 
     // Optional arguments Query String
-    const {limit = 6, offset = 0 } = req.query;
+    const { limit = 6, offset = 0 } = req.query;
+
+    const query = { status: true };
+
+    const [total, users] = await Promise.all([
+        User.countDocuments(query),
+        User.find(query)
+            .skip(Number(offset))
+            .limit(Number(limit))
+    ])
 
     res.status(200).json({
-        message: 'Get - Controlador'
+        total,
+        pages: Math.ceil(total / limit),
+        users
     });
 }
 
-const getUser = (req, res) => {
+const getUser = async (req, res) => {
 
     const { id } = req.params;
 
-    const {username, email } = req.body;
+    const user = await User.findById(id);
 
-    res.status(200).json({
-        id,
-        username,
-        email,
-        message: 'Get - Controlador'
-    });
+    if (!user) {
+        res.status(404).json({ 
+            message: `No existe ningún usuario con id ${id} en la base de datos`
+         });
+    }
+
+    if (!user.status) {
+        res.status(404).json({ 
+            message: `El usuario con id ${id} ha sido bloqueado. Hable con el administrador`
+         });
+    }
+
+    res.status(200).json({ user });
 }
 
-const createUser = (req, res) => {
+const createUser = async (req, res) => {
 
-    const { id, username, password, email } = req.body;
+    const { name, email, password, role } = req.body;
+
+    const user = new User({ name, email, password, role });
+
+    // Encrypt password
+    const salt = bcrypt.genSaltSync();
+
+    user.password = bcrypt.hashSync(password, salt);
+
+    // Save to database
+    await user.save();
 
     res.status(201).json({
-        id,
-        username,
-        password,
-        email,
-        message: 'Post - Controlador'
+        user
     });
 }
 
-const updateUser = (req, res) => {
+const updateUser = async (req, res) => {
 
     const { id } = req.params;
 
-    const { username, email } = req.body;
+    const { _id, password, google, ...rest } = req.body;
 
-    res.status(200).status(200).json({
-        id,
-        username,
-        email,
-        message: 'Put - Controlador'
-    });
+    if (password) {
+        // Encrypt password
+        const salt = bcrypt.genSaltSync();
+        rest.password = bcrypt.hashSync(password, salt);
+    }
+
+    const user = await User.findByIdAndUpdate(id, rest, { new: true });
+
+    res.status(200).status(200).json({ user });
 }
 
-const deleteUser = (req, res) => {
+const deleteUser = async (req, res) => {
 
     const { id } = req.params;
+
+    // Delete user
+    // const user = await User.findByIdAndDelete(id)
+
+    // Maintain referential integrity
+    const user = await User.findByIdAndUpdate(id, { status: false }, { new: true });
+
+    const authenticatedUser = req.user;
 
     res.status(200).json({
-        id,
-        message: 'Delete - Controlador'
+        user,
+        message: 'Usuario eliminado correctamente'
     });
 }
 

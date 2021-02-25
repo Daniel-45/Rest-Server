@@ -1,0 +1,41 @@
+@font-face {
+    font-family: "Houschka";
+    src: url("/assets/fonts/Houschka.ttf");
+}
+
+/* General styles */
+* {
+    font-family: "Houschka", Arial, Helvetica, sans-serif;
+}
+
+main {
+    width: 90%;
+    margin: 0 auto;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    list-style-position: inside;
+    padding-left: 0;
+}
+
+.google-buttons {
+    display: flex;
+    margin-top: 1em;
+}
+
+.signout {
+    width: 6.5em;
+    padding: .5em;
+    margin-left: .5em;
+    text-align: center;
+    box-shadow: 1px 2px 5px #ccc;
+}
+
+.signout a {
+    color: #757575;
+    font-size: .8em;
+}
