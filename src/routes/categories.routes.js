@@ -1,22 +1,34 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { createCategory } = require('../controllers/categories.controller');
-const { validateFields, validateJWT } = require('../middlewares');
+
+// Middlewares
+const { 
+    validateFields, 
+    validateJWT,
+    isAdminRole
+} = require('../middlewares');
+
+// Helpers
+const { categoryExists } = require('../helpers/database-validators');
+
+// Controllers
+const {
+    createCategory,
+    getCategory,
+    getCategories,
+    updateCategory,
+    deleteCategory
+} = require('../controllers/categories.controller');
 
 const router = Router();
 
-router.get('/get-categories', (req, res) => {
-    res.status(200).json({
-        message: 'Categorías'
-    })
-});
+router.get('/get-categories', getCategories);
 
-router.get('/get-category/:id', (req, res) => {
-    res.status(200).json({
-        message: 'Categoría'
-    })
-});
-
+router.get('/get-category/:id', [
+    check('id', 'No es un id válido').isMongoId(),
+    check('id').custom(categoryExists),
+    validateFields
+], getCategory);
 
 router.post('/create', [
     validateJWT,
@@ -24,19 +36,23 @@ router.post('/create', [
     validateFields
 ], createCategory);
 
-// Privado cualquier usuario con un token válido
-router.put('/update/:id', (req, res) => {
-    res.status(200).json({
-        message: 'Actualizar categoría'
-    })
-});
+// Private any user with a valid token
+router.put('/update/:id', [
+    validateJWT,
+    check('name', 'El nombre de la categoría es obligatorio').not().isEmpty(),
+    check('id', 'No es un id válido').isMongoId(),
+    check('id').custom(categoryExists),
+    validateFields
+], updateCategory);
 
-// Privado usuario administrador
-router.delete('/delete/:id', (req, res) => {
-    res.status(200).json({
-        message: 'Eliminar categoría'
-    })
-});
+// Private admin user
+router.delete('/delete/:id', [
+    validateJWT,
+    isAdminRole,
+    check('id', 'No es un id válido').isMongoId(),
+    check('id').custom(categoryExists),
+    validateFields
+], deleteCategory);
 
 
 module.exports = router;

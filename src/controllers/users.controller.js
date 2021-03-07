@@ -13,7 +13,7 @@ const getUsers = async (req, res) => {
         User.find(query)
             .skip(Number(offset))
             .limit(Number(limit))
-    ])
+    ]);
 
     res.status(200).json({
         total,
@@ -66,15 +66,15 @@ const updateUser = async (req, res) => {
 
     const { id } = req.params;
 
-    const { _id, password, google, ...rest } = req.body;
+    const { _id, password, google, ...data } = req.body;
 
     if (password) {
         // Encrypt password
         const salt = bcrypt.genSaltSync();
-        rest.password = bcrypt.hashSync(password, salt);
+        data.password = bcrypt.hashSync(password, salt);
     }
 
-    const user = await User.findByIdAndUpdate(id, rest, { new: true });
+    const user = await User.findByIdAndUpdate(id, data, { new: true });
 
     res.status(200).json({ user });
 }

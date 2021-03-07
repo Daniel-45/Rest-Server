@@ -18,4 +18,10 @@ const CategorySchema = Schema({
     }
 });
 
+// Remove password and version from output
+CategorySchema.methods.toJSON = function () {
+    const { __v, status, ...data } = this.toObject();
+    return data;
+}
+
 module.exports = model('Category', CategorySchema);
