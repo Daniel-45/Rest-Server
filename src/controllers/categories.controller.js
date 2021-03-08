@@ -1,4 +1,3 @@
-const { findByIdAndUpdate } = require('../models/category');
 const Category = require('../models/category');
 
 const getCategories = async (req, res) => {
@@ -52,7 +51,7 @@ const createCategory = async (req, res) => {
     if (categoryDB) {
         return res.status(400).json({
             message: `La categoría ${categoryDB.name} ya existe`
-        })
+        });
     }
 
     // Generate data to save
