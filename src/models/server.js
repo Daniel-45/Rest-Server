@@ -6,7 +6,7 @@ class Server {
 
     constructor() {
         this.app = express();
-        this.port = process.env.PORT
+        this.port = process.env.PORT;
         this.paths = {
             auth: '/api/auth',
             categories: '/api/categories',
@@ -57,4 +57,4 @@ class Server {
     }
 }
 
-module.exports = Server
+module.exports = Server;

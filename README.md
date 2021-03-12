@@ -22,7 +22,7 @@ Instalación global de **nodemon** `npm install -g nodemon`
 
 Instalar **nodemon** como una dependencia de desarrollo `npm install --save-dev nodemon`
 
-Ejecutar el entorno de desarrollo con **nodemon** `nodemon src/index.js`
+Ejecutar el entorno de desarrollo con **nodemon** `npm run dev`
 
 ## Licencia
 
