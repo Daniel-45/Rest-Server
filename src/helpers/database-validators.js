@@ -1,3 +1,4 @@
+const { Collection } = require('mongoose');
 const { User, Role, Category, Product } = require('../models');
 
 // User validations
@@ -48,10 +49,23 @@ const productExists = async (id) => {
     }
 }
 
+// Collection validations
+const validCollections = (collection = '', collections = []) => {
+    const collectionIncluded = collections.includes(collection)
+
+    if (!collectionIncluded) {
+        throw new Error(`La colección ${collection} no existe, las colecciones son ${collections}`)
+    }
+
+    // If all goes well
+    return true;
+}
+
 module.exports = {
     emailExists,
     isValidRole,
     userExistsById,
     categoryExists,
-    productExists
+    productExists,
+    validCollections
 }

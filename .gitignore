@@ -28,6 +28,10 @@ pids
 *.swp
 *.swo
 
+# Uploads files
+src/uploads/users/**.*
+src/uploads/products/**.*
+
 # Environment variables file
 .env
 

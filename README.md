@@ -24,6 +24,10 @@ Instalar **nodemon** como una dependencia de desarrollo `npm install --save-dev 
 
 Ejecutar el entorno de desarrollo con **nodemon** `npm run dev`
 
+## Documentación API
+
+[https://documenter.getpostman.com/view/9918006/TWDamvA5](https://documenter.getpostman.com/view/9918006/TWDamvA5)
+
 ## Licencia
 
 __GNU GENERAL PUBLIC LICENSE__, si desea saber más, visite el fichero LICENSE

@@ -29,10 +29,14 @@ const router = Router();
 
 router.get('/get-users', getUsers);
 
-router.get('/get-user/:id', getUser);
+router.get('/get-user/:id', [
+    check('id', 'No es un id válido').isMongoId(),
+    validateFields
+], getUser);
 
 router.post('/create', [
     check('name', 'El nombre de usuario es obligatorio').not().isEmpty(),
+    check('email', 'El email es obligatorio').not().isEmpty(),
     check('email', 'El email no es válido').isEmail(),
     check('email').custom(emailExists),
     check('password',
@@ -45,6 +49,8 @@ router.post('/create', [
 router.put('/update/:id', [
     check('id', 'No es un id válido').isMongoId(),
     check('id').custom(userExistsById),
+    check('email').custom(emailExists),
+    check('email', 'El email no es válido').isEmail(),
     check('role').custom(isValidRole),
     check('password',
         'La contraseña es obligatoria y debe tener mínimo 6 caracteres')

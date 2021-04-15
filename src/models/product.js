@@ -27,6 +27,9 @@ const ProductSchema = Schema({
         type: Boolean,
         default: true
     },
+    image: {
+        type: String
+    },
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',

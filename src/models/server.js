@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
+
 const { connection } = require('../database/configuration');
 
 class Server {
@@ -12,7 +14,8 @@ class Server {
             categories: '/api/categories',
             products: '/api/products',
             users: '/api/users',
-            search: '/api/search'
+            search: '/api/search',
+            uploads: '/api/uploads'
         }
 
         // Connection to the database
@@ -33,13 +36,21 @@ class Server {
         // CORS
         this.app.use(cors());
 
-        this.app.use(express.urlencoded({extended: false}));
+        this.app.use(express.urlencoded({ extended: false }));
 
         // Reading and parsing body
         this.app.use(express.json());
 
         // Public directory
         this.app.use(express.static('src/public'));
+
+        // File Upload
+        // Note that this option available for versions 1.0.0 and newer. 
+        this.app.use(fileUpload({
+            useTempFiles: true,
+            tempFileDir: '/tmp/',
+            createParentPath: true
+        }));
     }
 
     routes() {
@@ -48,6 +59,7 @@ class Server {
         this.app.use(this.paths.products, require('../routes/product.routes'));
         this.app.use(this.paths.users, require('../routes/users.routes'));
         this.app.use(this.paths.search, require('../routes/search'));
+        this.app.use(this.paths.uploads, require('../routes/uploads'));
     }
 
     listen() {
